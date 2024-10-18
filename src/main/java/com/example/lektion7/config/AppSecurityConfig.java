@@ -1,6 +1,7 @@
 package com.example.lektion7.config;
 
 
+import com.example.lektion7.authorities.UserRoles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -33,7 +34,8 @@ public class AppSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "login", "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
-                        .requestMatchers("/test").hasRole("ADMIN")
+                        .requestMatchers("/admin").hasRole(UserRoles.ADMIN.name())
+                        .requestMatchers("/user").hasRole(UserRoles.USER.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults());
@@ -48,6 +50,7 @@ public class AppSecurityConfig {
                 .withDefaultPasswordEncoder()
                 .username("benny")
                 .password("123")
+                .authorities(UserRoles.USER.getAuthorities()) // ROLE + Permissions
                 .build();
 
         return new InMemoryUserDetailsManager(user);
