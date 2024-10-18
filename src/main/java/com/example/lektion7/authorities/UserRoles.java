@@ -33,7 +33,7 @@ public enum UserRoles {
 //                getPermission().stream().map(index -> new SimpleGrantedAuthority(index)).toList()
         );
 
-        simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_" + this.name())); // Springs requirement to Authority role
 
         simpleGrantedAuthorityList.addAll(getPermission().stream().map(SimpleGrantedAuthority::new).toList());
 

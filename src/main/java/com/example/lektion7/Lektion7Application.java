@@ -27,7 +27,7 @@ public class Lektion7Application {
 			System.out.println(userRoles.getPermission());
 		}
 
-		System.out.println("---GetAuthorities");
+		System.out.println("---GetAuthorities---");
 		System.out.println(UserRoles.ADMIN.name().toString()); // Should not return ROLE_ + name
 		System.out.println(
 				UserRoles.ADMIN.getAuthorities()

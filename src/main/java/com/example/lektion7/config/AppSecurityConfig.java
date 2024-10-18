@@ -1,6 +1,7 @@
 package com.example.lektion7.config;
 
 
+import com.example.lektion7.authorities.UserPermission;
 import com.example.lektion7.authorities.UserRoles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,8 +35,10 @@ public class AppSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "login", "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
-                        .requestMatchers("/admin").hasRole(UserRoles.ADMIN.name())
+                        //.requestMatchers("/admin").hasRole(UserRoles.ADMIN.name())
                         .requestMatchers("/user").hasRole(UserRoles.USER.name())
+                        .requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission()) // funkar inte
+                        .requestMatchers("/admin").hasAuthority(UserPermission.GET.getPermission())    // Funkar
                         .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults());
