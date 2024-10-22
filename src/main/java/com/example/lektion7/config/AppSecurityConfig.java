@@ -47,7 +47,7 @@ public class AppSecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
                         //.requestMatchers("/admin").hasRole(UserRoles.ADMIN.name())
                         .requestMatchers("/user").hasRole(UserRoles.USER.name())
-                        .requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission()) // funkar inte
+                        //.requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission()) // funkar inte
                         .requestMatchers("/admin").hasAuthority(UserPermission.GET.getPermission())    // Funkar
                         .anyRequest().authenticated()
                 )
@@ -62,8 +62,8 @@ public class AppSecurityConfig {
         UserDetails user = User.builder()
                // .withDefaultPasswordEncoder()
                // .passwordEncoder()
-                .username(bcrypt.bcryptPasswordEncoder().encode("benny"))
-                .password("123")
+                .username("benny")
+                .password(bcrypt.bcryptPasswordEncoder().encode("123"))
                 .authorities(UserRoles.USER.getAuthorities()) // ROLE + Permissions
                 .build();
 
