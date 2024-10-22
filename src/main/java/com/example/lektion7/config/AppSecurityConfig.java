@@ -3,10 +3,10 @@ package com.example.lektion7.config;
 
 import com.example.lektion7.authorities.UserPermission;
 import com.example.lektion7.authorities.UserRoles;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -21,6 +21,15 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class AppSecurityConfig {
 
+
+    private final AppPasswordConfig bcrypt;
+
+    @Autowired
+    public AppSecurityConfig(AppPasswordConfig config) {
+        this.bcrypt = config;
+    }
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -30,6 +39,7 @@ public class AppSecurityConfig {
         // TODO - Question - Why doesn't ("/login").permitAll() <-- work?
         // TODO - Question - FormLogin.html, where is /login?
         // TODO - Question - Do you want this class in .gitignore?
+        // TODO - #8 Bean alternative instead of Autowired
 
         http
                 .authorizeHttpRequests(auth -> auth
@@ -49,9 +59,10 @@ public class AppSecurityConfig {
     // DEBUG USER -
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails user = User
-                .withDefaultPasswordEncoder()
-                .username("benny")
+        UserDetails user = User.builder()
+               // .withDefaultPasswordEncoder()
+               // .passwordEncoder()
+                .username(bcrypt.bcryptPasswordEncoder().encode("benny"))
                 .password("123")
                 .authorities(UserRoles.USER.getAuthorities()) // ROLE + Permissions
                 .build();
