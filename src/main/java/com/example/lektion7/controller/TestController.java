@@ -55,4 +55,22 @@ public class TestController {
         return repository.save(user);
     }
 
+    @GetMapping("/api/createadmin/{name}")
+    public CustomUser createAdmin (@PathVariable String name, BCryptPasswordEncoder encoder) { // does not use our @Bean from AppPasswordConfig
+
+        CustomUser user = new CustomUser(
+                name,
+                encoder.encode("123"),
+                UserRoles.ADMIN, // TODO check if works, correctly sets authorities
+                true,
+                true,
+                true,
+                true
+        );
+
+
+
+        return repository.save(user);
+    }
+
 }
