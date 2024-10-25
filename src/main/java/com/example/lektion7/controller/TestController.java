@@ -6,6 +6,7 @@ import com.example.lektion7.model.CustomUser;
 import com.example.lektion7.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,12 +17,16 @@ import java.util.Objects;
 public class TestController {
 
     private final AppPasswordConfig passwordConfig;
+
     private final UserRepository repository;
 
+    private final PasswordEncoder encoder;  //Interface
+
     @Autowired
-    public TestController(AppPasswordConfig passwordConfig, UserRepository repository) {
+    public TestController(AppPasswordConfig passwordConfig, UserRepository repository, PasswordEncoder encoder) {
         this.passwordConfig = passwordConfig;
         this.repository = repository;
+        this.encoder = encoder;
     }
 
 
@@ -34,6 +39,13 @@ public class TestController {
     // BCryptPasswordEncoder encoder uses default class, not our bean from AppPasswordConfig
     @GetMapping("/api/hash1")
     public String testHash1 (BCryptPasswordEncoder encoder) {
+
+        return encoder.encode("123");
+    }
+
+    //Using interface instead, now finds out @Bean from AppPasswordConfig class
+    @GetMapping("/api/hash2")
+    public String testHash2 () {
 
         return encoder.encode("123");
     }
