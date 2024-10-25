@@ -1,6 +1,7 @@
 package com.example.lektion7.model;
 
 import com.example.lektion7.authorities.UserRoles;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -30,6 +31,20 @@ public class CustomUser {
 
     }
 
+    public CustomUser(String username, String password, UserRoles userRole, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialNonExpired, boolean isEnabled) {
+        this.username = username;
+        this.password = password;
+        this.userRole = userRole;
+        this.isAccountNonExpired = isAccountNonExpired;
+        this.isAccountNonLocked = isAccountNonLocked;
+        this.isCredentialNonExpired = isCredentialNonExpired;
+        this.isEnabled = isEnabled;
+    }
+
+    public Long getId () {
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -49,10 +64,12 @@ public class CustomUser {
 
     // TODO - Returns just the ENUM Name (ADMIN), we already have authorities as a list
     // Authorities include : Role and permission: ["ROLE_ADMIN", "GET", "DELETE"]
+    //@JsonIgnore
     public List<SimpleGrantedAuthority> getAuthorities () {
         return userRole.getAuthorities();
     }
     // Permissions include ["GET", "DELETE"]
+    //@JsonIgnore //userRepository.save() will print out these details otherwise
     public List<String> getPermissions () {
         return userRole.getPermission();
     }

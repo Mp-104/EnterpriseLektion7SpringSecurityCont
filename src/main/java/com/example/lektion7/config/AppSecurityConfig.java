@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,7 +49,7 @@ public class AppSecurityConfig {
                         //.requestMatchers("/admin").hasRole(UserRoles.ADMIN.name())
                         .requestMatchers("/user").hasRole(UserRoles.USER.name())
                         //.requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission()) // funkar inte
-                        .requestMatchers("/admin").hasAuthority(UserPermission.GET.getPermission())    // Funkar
+                        .requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission())    // Funkar
                         .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults());
@@ -56,18 +57,23 @@ public class AppSecurityConfig {
         return http.build();
     }
 
-    // DEBUG USER -
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.builder()
-               // .withDefaultPasswordEncoder()
-               // .passwordEncoder()
-                .username("benny")
-                .password(bcrypt.bcryptPasswordEncoder().encode("123"))
-                .authorities(UserRoles.USER.getAuthorities()) // ROLE + Permissions
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/h2-console/**", /*"/register",*/ "/update/**", /*"/list/**",*/ "/update/**"/*, "/delete/**"*/);
     }
+
+    // DEBUG USER -
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails user = User.builder()
+//               // .withDefaultPasswordEncoder()
+//               // .passwordEncoder()
+//                .username("benny")
+//                .password(bcrypt.bcryptPasswordEncoder().encode("123"))
+//                .authorities(UserRoles.USER.getAuthorities()) // ROLE + Permissions
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 
 }
