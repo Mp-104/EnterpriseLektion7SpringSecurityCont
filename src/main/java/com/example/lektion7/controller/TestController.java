@@ -29,9 +29,16 @@ public class TestController {
         return passwordConfig.bcryptPasswordEncoder().encode("123");
     }
 
+    // BCryptPasswordEncoder encoder uses default class, not our bean from AppPasswordConfig
+    @GetMapping("/api/hash1")
+    public String testHash1 (BCryptPasswordEncoder encoder) {
+
+        return encoder.encode("123");
+    }
+
     // TODO - not able create users with identical credentials
     @GetMapping("/api/createuser/{name}")
-    public CustomUser createUser (@PathVariable String name, BCryptPasswordEncoder encoder) {
+    public CustomUser createUser (@PathVariable String name, BCryptPasswordEncoder encoder) { // does not use our @Bean from AppPasswordConfig
 
         CustomUser user = new CustomUser(
                 name,
