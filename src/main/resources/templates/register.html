@@ -7,12 +7,20 @@
 <body>
     <h1>Register User</h1>
 
-    <form action="@{/user/register}" th:object="${user}" method="post">
+    <p>DEBUGGING</p>
+    <p th:object="${customUser}" th:text="${customUser}"></p>
+
+    <form action="#" th:action="@{/user/register}" th:object="${customUser}" method="post">
 
         <label>
             Username
             <input type="text" name="username" th:field="*{username}">
+
         </label>
+
+        <br/>
+        <br/>
+        <br/>
 
         <label>
             Password
@@ -30,5 +38,10 @@
         </div>
 
     </form>
+
+    <div th:if="${error}">
+        <p th:text="${error}" style="color: blue;"></p>
+    </div>
+
 </body>
 </html>

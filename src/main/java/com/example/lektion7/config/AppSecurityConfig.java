@@ -48,7 +48,7 @@ public class AppSecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "user/register").permitAll()
                         //.requestMatchers("/admin").hasRole(UserRoles.ADMIN.name())
-                        .requestMatchers("/user").hasRole(UserRoles.USER.name())
+                        //.requestMatchers("/user").hasRole(UserRoles.USER.name())
                         //.requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission()) // funkar inte
                         .requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission())    // Funkar
                         .anyRequest().authenticated()

@@ -17,11 +17,12 @@ public class CustomUser {
 
     // @NotBlank - for char sequences, cannot be whitespace
     // @NotEmpty - mostly for collections, can be whitespace
+
     @Size(message = "should be at least 3, no more than 32", min = 3, max = 32)
     private String username;
 
     @NotBlank
-    @Size(min = 5, max = 64, message = "Must be between 5 - 64 characters")
+    @Size(min = 4, max = 80, message = "Must be between 4 - 64 characters")
     private String password;
 
     // TODO - implement NotBlank, possibly for <select> element?
