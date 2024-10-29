@@ -37,6 +37,17 @@
             </ul>
         </div>
 
+        <p th:text="${roles}"></p>
+
+        <label>
+            User Role
+
+            <select th:field="*{userRole}" >
+                <option th:each="index : ${roles}" th:value="${index}" th:text="${index}"></option>
+
+            </select>
+        </label>
+
     </form>
 
     <div th:if="${error}">

@@ -33,6 +33,7 @@ public class UserController {
     public String registerUser (Model model) {
 
         model.addAttribute("customUser", new CustomUser());
+        model.addAttribute("roles", UserRoles.values());
 
         return "register";
     }
@@ -43,11 +44,13 @@ public class UserController {
                                 BindingResult bindingResult,
                                 Model model// Checks for error handling
     ) {
+
         System.out.println("post register");
 
         // TODO - problem: when we navigate, we lose track of our errors
         if (bindingResult.hasErrors()) {
             //model.addAttribute("customUser", customUser);
+            model.addAttribute("roles", UserRoles.values());
             return "register";  //Does our model get injected? || add for query params ?error=someRandomError
         }
 
@@ -59,7 +62,7 @@ public class UserController {
                     new CustomUser(
                             customUser.getUsername(),
                             encoder.encode(customUser.getPassword()),
-                            UserRoles.ADMIN,
+                            customUser.getUserRole(),
                             true,
                             true,
                             true,
@@ -68,6 +71,7 @@ public class UserController {
             );
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
+            model.addAttribute("roles", UserRoles.values());
             return "register";
         }
         // Username, Password
