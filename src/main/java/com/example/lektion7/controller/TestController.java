@@ -22,7 +22,7 @@ public class TestController {
 
     private final PasswordEncoder encoder;  //Interface
 
-    @Autowired
+
     public TestController(AppPasswordConfig passwordConfig, UserRepository repository, PasswordEncoder encoder) {
         this.passwordConfig = passwordConfig;
         this.repository = repository;

@@ -44,8 +44,9 @@ public class AppSecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "login", "/api/**").permitAll()
+                        .requestMatchers("/", "login", "/api/**", "/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "user/register").permitAll()
                         //.requestMatchers("/admin").hasRole(UserRoles.ADMIN.name())
                         .requestMatchers("/user").hasRole(UserRoles.USER.name())
                         //.requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission()) // funkar inte
@@ -59,7 +60,7 @@ public class AppSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/h2-console/**", /*"/register",*/ "/update/**", /*"/list/**",*/ "/update/**"/*, "/delete/**"*/);
+        return (web) -> web.ignoring().requestMatchers("/h2-console/**", "/user/**", /*"/register",*/ "/update/**", /*"/list/**",*/ "/update/**"/*, "/delete/**"*/);
     }
 
     // DEBUG USER -

@@ -3,6 +3,7 @@ package com.example.lektion7.model;
 import com.example.lektion7.authorities.UserRoles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;
@@ -14,9 +15,16 @@ public class CustomUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    // @NotBlank - for char sequences, cannot be whitespace
+    // @NotEmpty - mostly for collections, can be whitespace
+    @Size(message = "should be at least 3, no more than 32", min = 3, max = 32)
     private String username;
+
+    @NotBlank
+    @Size(min = 5, max = 64, message = "Must be between 5 - 64 characters")
     private String password;
 
+    // TODO - implement NotBlank, possibly for <select> element?
     @Enumerated(EnumType.STRING)
     private UserRoles userRole;
 
