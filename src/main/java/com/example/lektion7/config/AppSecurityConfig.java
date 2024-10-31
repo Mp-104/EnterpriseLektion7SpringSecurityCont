@@ -2,7 +2,6 @@ package com.example.lektion7.config;
 
 
 import com.example.lektion7.authorities.UserPermission;
-import com.example.lektion7.authorities.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,23 +9,22 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig {
 
+    private final CustomUserDetailService customUserDetailsService;
 
     private final AppPasswordConfig bcrypt;
 
     @Autowired
-    public AppSecurityConfig(AppPasswordConfig config) {
+    public AppSecurityConfig(CustomUserDetailService customUserDetails, AppPasswordConfig config) {
+        this.customUserDetailsService = customUserDetails;
         this.bcrypt = config;
     }
 
@@ -43,6 +41,7 @@ public class AppSecurityConfig {
         // TODO - #8 Bean alternative instead of Autowired
 
         http
+                //.csrf(AbstractHttpConfigurer::disable)  // For testing, enable in production
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "login", "/api/**", "/user/**", "/static/**", "/logout").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
@@ -60,7 +59,17 @@ public class AppSecurityConfig {
                 )
                 .logout( httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
                         .logoutUrl("/logout")
-                        .permitAll());
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
+                        .deleteCookies("remember-me", "JSESSIONID")
+                        .permitAll())
+
+                .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
+                        .rememberMeParameter("remember-me")  // can be overridden
+                        .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21)) // validity from days to secs
+                        .key("appSecureKey")
+                        .userDetailsService(customUserDetailsService)
+                        );
 
         return http.build();
     }
