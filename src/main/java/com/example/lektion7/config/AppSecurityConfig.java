@@ -44,16 +44,23 @@ public class AppSecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "login", "/api/**", "/user/**").permitAll()
+                        .requestMatchers("/", "login", "/api/**", "/user/**", "/static/**", "/logout").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "user/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "user/register", "/api/**").permitAll()
                         //.requestMatchers("/admin").hasRole(UserRoles.ADMIN.name())
                         //.requestMatchers("/user").hasRole(UserRoles.USER.name())
                         //.requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission()) // funkar inte
                         .requestMatchers("/admin").hasAuthority(UserPermission.DELETE.getPermission())    // Funkar
                         .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults());
+                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+                        .loginPage("/login")
+                                .permitAll()
+                // TODO - implement stuff
+                )
+                .logout( httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
+                        .logoutUrl("/logout")
+                        .permitAll());
 
         return http.build();
     }

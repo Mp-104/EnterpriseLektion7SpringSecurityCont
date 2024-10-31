@@ -4,12 +4,13 @@ import com.example.lektion7.authorities.UserRoles;
 import com.example.lektion7.config.AppPasswordConfig;
 import com.example.lektion7.model.CustomUser;
 import com.example.lektion7.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -87,6 +88,16 @@ public class TestController {
 
 
         return repository.save(user);
+    }
+
+    @PostMapping("/api/users")
+    public ResponseEntity<CustomUser> testValidation (@Valid @RequestBody CustomUser user, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.status(400).build();
+        }
+
+        return ResponseEntity.ok(user);
     }
 
 }
