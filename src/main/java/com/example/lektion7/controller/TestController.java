@@ -3,6 +3,8 @@ package com.example.lektion7.controller;
 import com.example.lektion7.authorities.UserRoles;
 import com.example.lektion7.config.AppPasswordConfig;
 import com.example.lektion7.model.CustomUser;
+import com.example.lektion7.model.CustomUserDTO;
+import com.example.lektion7.model.RCustomUserDTO;
 import com.example.lektion7.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class TestController {
@@ -98,6 +101,26 @@ public class TestController {
         }
 
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/api/current-username")
+    public ResponseEntity<String> showUsername () {
+
+        Optional<CustomUser> user = repository.findByUsername("Test");
+
+        if (user.isPresent()) {
+
+            RCustomUserDTO customUserDTO = new RCustomUserDTO(user.get());
+
+            RCustomUserDTO userDTO = new RCustomUserDTO(user.get().getUsername());
+
+            userDTO.username();
+
+            return ResponseEntity.status(200).body(customUserDTO.username());
+        }
+
+        return ResponseEntity.status(404).build();
+
     }
 
 }
