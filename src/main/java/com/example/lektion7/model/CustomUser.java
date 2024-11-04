@@ -142,4 +142,12 @@ public class CustomUser {
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
     }
+
+    public List<Task> getTasks() {
+        return taskList;
+    }
+
+    public void setTaks (List<Task> taskList) {
+        this.taskList = taskList;
+    }
 }

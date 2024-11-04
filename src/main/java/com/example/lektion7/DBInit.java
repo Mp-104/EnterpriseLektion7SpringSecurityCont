@@ -30,7 +30,7 @@ public class DBInit {
 
         user.setUsername("Test");
         user.setPassword(encoder.bcryptPasswordEncoder().encode("test"));
-        user.setUserRole(UserRoles.USER);
+        user.setUserRole(UserRoles.ADMIN);
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialNonExpired(true);
