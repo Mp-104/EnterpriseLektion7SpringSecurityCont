@@ -36,6 +36,15 @@ public class CustomUser {
     private boolean isCredentialNonExpired;
     private boolean isEnabled;
 
+
+    // TODO - many to any?
+    @OneToMany(mappedBy = "customUser", cascade = CascadeType.ALL)
+    //@JoinTable(name = "task_list,",
+    //joinColumns = @JoinColumn(name = "user_id"),
+    //inverseJoinColumns = @JoinColumn(name = "task_id"))
+    private List<Task> taskList;
+
+
     public CustomUser() {
 
     }

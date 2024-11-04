@@ -41,7 +41,7 @@ public class AppSecurityConfig {
         // TODO - #8 Bean alternative instead of Autowired
 
         http
-                //.csrf(AbstractHttpConfigurer::disable)  // For testing, enable in production
+                .csrf(AbstractHttpConfigurer::disable)  // For testing, enable in production
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "login", "/api/**", "/user/**", "/static/**", "/logout").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()

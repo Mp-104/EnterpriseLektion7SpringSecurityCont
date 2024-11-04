@@ -5,10 +5,14 @@ import com.example.lektion7.config.AppPasswordConfig;
 import com.example.lektion7.model.CustomUser;
 import com.example.lektion7.model.CustomUserDTO;
 import com.example.lektion7.model.RCustomUserDTO;
+import com.example.lektion7.model.Task;
+import com.example.lektion7.repository.TaskRepository;
 import com.example.lektion7.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -26,11 +30,14 @@ public class TestController {
 
     private final PasswordEncoder encoder;  //Interface
 
+    private final TaskRepository taskRepository;
 
-    public TestController(AppPasswordConfig passwordConfig, UserRepository repository, PasswordEncoder encoder) {
+
+    public TestController(AppPasswordConfig passwordConfig, UserRepository repository, PasswordEncoder encoder, TaskRepository taskRepository) {
         this.passwordConfig = passwordConfig;
         this.repository = repository;
         this.encoder = encoder;
+        this.taskRepository = taskRepository;
     }
 
 
@@ -121,6 +128,48 @@ public class TestController {
 
         return ResponseEntity.status(404).build();
 
+    }
+
+    // Using postman - use two tabs, one for logging in and one for posting task, both POST requests
+    // x-form-www-urlencoded in body to set log in details, username, password, remember-me with valid values
+    // in /api/task use body -> raw -> JSON to set task values
+    @PostMapping("/api/task")
+    public ResponseEntity<Task> createTask (
+            @Valid @RequestBody Task task,
+            BindingResult bindingResult
+    ) {
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+        // TODO - can be implemented in Service class
+        // Currently logged in user
+        String username = authentication.getName();
+
+        // Null check user in db ( database )
+        Optional<CustomUser> currentUser = repository.findByUsername(username);
+
+        System.out.println("-------DEBUG-------");
+        //System.out.println(currentUser.get());
+        System.out.println(username);
+        System.out.println(authentication.getPrincipal().toString());
+        System.out.println("-------DEBUG------");
+
+        // Check if user is not null
+        if (currentUser.isEmpty()) {
+
+            //task.setCustomUser(currentUser.get()); // Cast Optional<CustomUser> -> CustomUser
+            return ResponseEntity.notFound().build();
+        }
+
+        // Connect Task -> User
+        task.setCustomUser(currentUser.get());
+
+        return ResponseEntity.status(201).body(taskRepository.save(task));
     }
 
 }
