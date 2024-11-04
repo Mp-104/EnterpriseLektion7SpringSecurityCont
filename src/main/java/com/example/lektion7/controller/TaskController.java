@@ -78,14 +78,14 @@ public class TaskController {
     }
     @PostMapping("/editTask")
     public String saveTask (
-                            @RequestParam("taskId") Long taskId,
+                            //@RequestParam("taskId") Long taskId, // Alternative approach, if no setter for id in Task
                             //@RequestParam("title") String title,
                             //@RequestParam("description") String description
                             @ModelAttribute("task") Task task
     ) {
 
-        Task task1 = taskRepository.findById(taskId).orElse(null);
-        System.out.println("task id: " + task.getId()); //Why is it null
+        Task task1 = taskRepository.findById(task.getId()).orElse(null);
+        System.out.println("task id: " + task.getId()); //Why is it null, because it had no setter..
         System.out.println("task title: " + task.getTitle()); // but these are not..
         System.out.println("task desc: " + task.getDescription());
 
