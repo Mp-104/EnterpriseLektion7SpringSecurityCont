@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class TaskController {
@@ -44,6 +45,7 @@ public class TaskController {
 
     }
 
+    // TODO - not in use..
     @PostMapping("/task")
     public String registerUser (@Valid Task task, BindingResult result) {
 
@@ -65,6 +67,7 @@ public class TaskController {
 
     }
 
+    // TODO - other users can access others tasks due to @RequestParam taskId..
     @GetMapping("/editTask")
     public String saveTask (@RequestParam Long taskId, Model model) {
         Task task = taskRepository.findById(taskId).get();
@@ -84,6 +87,8 @@ public class TaskController {
                             @ModelAttribute("task") Task task
     ) {
 
+
+
         Task task1 = taskRepository.findById(task.getId()).orElse(null);
         System.out.println("task id: " + task.getId()); //Why is it null, because it had no setter..
         System.out.println("task title: " + task.getTitle()); // but these are not..
@@ -100,6 +105,36 @@ public class TaskController {
 
         return "redirect:/alltasks";
 
+    }
+
+    @GetMapping("/newTask")
+    public String makeTask (Model model) {
+
+        model.addAttribute("task", new Task());
+
+        return "new-task";
+    }
+
+    // TODO - needs more error handling, validation etc
+    @PostMapping("/newTask")
+    public String createTask (@ModelAttribute("task") Task task) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        Optional<CustomUser> currentUser = userRepository.findByUsername(username);
+
+        Task newTask = new Task();
+
+        newTask.setDescription(task.getDescription());
+        newTask.setTitle(task.getTitle());
+        newTask.setCustomUser(currentUser.get());
+
+        taskRepository.save(newTask);
+
+
+        return "redirect:/alltasks";
     }
 
 }
