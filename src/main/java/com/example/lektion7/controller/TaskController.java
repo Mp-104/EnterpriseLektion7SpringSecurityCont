@@ -68,8 +68,11 @@ public class TaskController {
     }
 
     // TODO - other users can access others tasks due to @RequestParam taskId..
+    // Todo - even without @RequestParam, it still looks like this http://localhost:8080/editTask?taskId1=1
     @GetMapping("/editTask")
-    public String saveTask (@RequestParam Long taskId, Model model) {
+    public String saveTask (//@RequestParam Long taskId,
+                            @ModelAttribute("taskId1") Long taskId,
+                            Model model) {
         Task task = taskRepository.findById(taskId).get();
 
 

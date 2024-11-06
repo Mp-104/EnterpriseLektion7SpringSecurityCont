@@ -28,6 +28,14 @@
                 <td th:text="${task.description}"></td>
 
                 <td><a th:href="@{/editTask(taskId=${task.id})}">Edit Task</a> </td>
+                <td><a th:href="@{/editTask}">Edit Task Test</a> </td>
+
+                <td>
+                    <form th:action="@{/editTask}" method="get">
+                        <input type="hidden" name="taskId1" th:value="${task.id}"/>
+                        <button type="submit">Edit Task</button>
+                    </form>
+                </td>
 
             </tr>
 
