@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +43,7 @@ public class AppSecurityConfig {
         // TODO - #8 Bean alternative instead of Autowired
 
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)  // For testing, enable in production
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "login", "/api/**", "/user/**", "/static/**", "/logout").permitAll()
@@ -92,5 +95,6 @@ public class AppSecurityConfig {
 //
 //        return new InMemoryUserDetailsManager(user);
 //    }
+
 
 }
